@@ -2,6 +2,7 @@ package com.khesam.dezhban.security;
 
 import com.khesam.dezhban.dataaccess.local.entity.OAuth2AuthorizationEntity;
 import org.springframework.security.oauth2.core.*;
+import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationCode;
