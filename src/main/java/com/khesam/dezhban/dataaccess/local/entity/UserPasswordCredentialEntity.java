@@ -1,9 +1,6 @@
 package com.khesam.dezhban.dataaccess.local.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,11 +14,15 @@ public class UserPasswordCredentialEntity {
     @Column(name = "USER_ID", nullable = false, updatable = false)
     private long userId;
 
-    @Column(name = "PASSWORD_HASH", nullable = false)
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "USER_ID", nullable = false, updatable = false)
+    private EndUserEntity endUser;
+
+    @Column(name = "PASSWORD_HASH", nullable = false, length = 255)
     private String passwordHash;
 
     @Column(name = "EXPIRES_AT")
-    @UpdateTimestamp
     private Instant expiresAt;
 
     @Column(name = "CREATED_AT", nullable = false, updatable = false)
@@ -38,6 +39,14 @@ public class UserPasswordCredentialEntity {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public EndUserEntity getEndUser() {
+        return endUser;
+    }
+
+    public void setEndUser(EndUserEntity endUser) {
+        this.endUser = endUser;
     }
 
     public String getPasswordHash() {

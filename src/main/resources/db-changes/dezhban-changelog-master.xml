@@ -5,6 +5,10 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-
-
+    <include file="dezhban-changes/001-create-end-user-table.sql" relativeToChangelogFile="true"/>
+    <include file="dezhban-changes/002-create-user-password-credential-table.sql" relativeToChangelogFile="true"/>
+    <include file="dezhban-changes/003-create-user-profile-table.sql" relativeToChangelogFile="true"/>
+    <include file="dezhban-changes/004-create-user-webauthn-credential-table.sql" relativeToChangelogFile="true"/>
+    <include file="dezhban-changes/005-create-client-table.sql" relativeToChangelogFile="true"/>
+    <include file="dezhban-changes/006-create-ap-client-profile-table.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
