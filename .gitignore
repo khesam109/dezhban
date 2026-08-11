@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Local OAuth tokens ###
+.dezhban-tokens
+.dezhban-tokens.*

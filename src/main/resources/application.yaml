@@ -10,6 +10,8 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+    hikari:
+      schema: DEZHBAN
   h2:
     console:
       enabled: true

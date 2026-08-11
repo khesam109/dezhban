@@ -17,6 +17,7 @@ AUTHORIZATION_SERVER="${AUTHORIZATION_SERVER:-http://localhost:8585}"
 CLIENT_ID="${CLIENT_ID:-client}"
 CLIENT_SECRET="${CLIENT_SECRET:-secret}"
 REDIRECT_URI="${REDIRECT_URI:-http://127.0.0.1:8585/callback.html}"
+TOKEN_FILE="${TOKEN_FILE:-.dezhban-tokens}"
 
 TOKEN_RESPONSE="$(
     curl --fail-with-body --silent --show-error \
@@ -28,10 +29,35 @@ TOKEN_RESPONSE="$(
         --data-urlencode "redirect_uri=${REDIRECT_URI}"
 )"
 
-printf 'Token response:\n%s\n' "${TOKEN_RESPONSE}"
-printf '\nUse access_token from that response to call UserInfo:\n'
+umask 077
+TEMPORARY_TOKEN_FILE="$(mktemp "${TOKEN_FILE}.XXXXXX")"
+trap 'rm -f "${TEMPORARY_TOKEN_FILE}"' EXIT
+
+printf '%s' "${TOKEN_RESPONSE}" |
+    python3 -c '
+import json
+import shlex
+import sys
+
+response = json.load(sys.stdin)
+for environment_name, response_name in (
+    ("ACCESS_TOKEN", "access_token"),
+    ("REFRESH_TOKEN", "refresh_token"),
+):
+    value = response.get(response_name)
+    if not value:
+        raise SystemExit(f"Token response does not contain {response_name}")
+    print(f"{environment_name}={shlex.quote(value)}")
+' > "${TEMPORARY_TOKEN_FILE}"
+
+mv "${TEMPORARY_TOKEN_FILE}" "${TOKEN_FILE}"
+trap - EXIT
+
+printf 'Access and refresh tokens stored in %s with owner-only permissions.\n' "${TOKEN_FILE}"
+printf 'Load them into the current shell with: source %q\n' "${TOKEN_FILE}"
+printf '\nCall UserInfo after loading the file:\n'
 printf '%s\n' \
-    "curl --fail-with-body --header 'Authorization: Bearer <access_token>' '${AUTHORIZATION_SERVER}/userinfo'"
-printf '\nUse refresh_token to obtain a replacement token:\n'
+    "curl --fail-with-body --header 'Authorization: Bearer \${ACCESS_TOKEN}' '${AUTHORIZATION_SERVER}/userinfo'"
+printf '\nRefresh the tokens with:\n'
 printf '%s\n' \
-    "curl --fail-with-body --user '${CLIENT_ID}:${CLIENT_SECRET}' --request POST '${AUTHORIZATION_SERVER}/oauth2/token' --data-urlencode 'grant_type=refresh_token' --data-urlencode 'refresh_token=<refresh_token>'"
+    "curl --fail-with-body --user '${CLIENT_ID}:${CLIENT_SECRET}' --request POST '${AUTHORIZATION_SERVER}/oauth2/token' --data-urlencode 'grant_type=refresh_token' --data-urlencode 'refresh_token=\${REFRESH_TOKEN}'"

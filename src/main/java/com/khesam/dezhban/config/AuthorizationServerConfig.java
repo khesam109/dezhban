@@ -6,10 +6,12 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationConsentService;
-import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationService;
+import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -68,12 +70,21 @@ class AuthorizationServerConfig {
     }
 
     @Bean
-    OAuth2AuthorizationService authorizationService() {
-        return new InMemoryOAuth2AuthorizationService();
+    OAuth2AuthorizationService authorizationService(
+            JdbcOperations jdbcOperations,
+            RegisteredClientRepository registeredClientRepository
+    ) {
+        return new JdbcOAuth2AuthorizationService(jdbcOperations, registeredClientRepository);
     }
 
     @Bean
-    OAuth2AuthorizationConsentService authorizationConsentService() {
-        return new InMemoryOAuth2AuthorizationConsentService();
+    OAuth2AuthorizationConsentService authorizationConsentService(
+            JdbcOperations jdbcOperations,
+            RegisteredClientRepository registeredClientRepository
+    ) {
+        return new JdbcOAuth2AuthorizationConsentService(
+                jdbcOperations,
+                registeredClientRepository
+        );
     }
 }
