@@ -1,6 +1,5 @@
 package com.khesam.dezhban.config;
 
-import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -21,7 +20,7 @@ class AuthorizationServerConfig {
     @Bean
     @Order(1)
     SecurityFilterChain h2ConsoleSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.securityMatcher(PathRequest.toH2Console());
+        http.securityMatcher("/h2-console/**");
         http.authorizeHttpRequests(requests -> requests.anyRequest().permitAll());
         http.csrf(AbstractHttpConfigurer::disable);
         http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
