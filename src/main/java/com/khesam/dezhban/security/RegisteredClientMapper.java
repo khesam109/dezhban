@@ -1,8 +1,5 @@
 package com.khesam.dezhban.security;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khesam.dezhban.common.ClientAuthenticationType;
 import com.khesam.dezhban.common.GrantType;
 import com.khesam.dezhban.dataaccess.local.entity.ClientEntity;
@@ -12,6 +9,9 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 @Component
 public class RegisteredClientMapper {
@@ -57,7 +57,7 @@ public class RegisteredClientMapper {
                             settings.path("requireAuthorizationConsent").asBoolean(false)
                     )
                     .build();
-        } catch (JsonProcessingException exception) {
+        } catch (JacksonException exception) {
             throw new IllegalStateException("Invalid client settings JSON", exception);
         }
     }
