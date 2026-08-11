@@ -8,9 +8,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
-import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
-import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
@@ -67,14 +65,6 @@ class AuthorizationServerConfig {
     @Bean
     AuthorizationServerSettings settings() {
         return AuthorizationServerSettings.builder().build();
-    }
-
-    @Bean
-    OAuth2AuthorizationService authorizationService(
-            JdbcOperations jdbcOperations,
-            RegisteredClientRepository registeredClientRepository
-    ) {
-        return new JdbcOAuth2AuthorizationService(jdbcOperations, registeredClientRepository);
     }
 
     @Bean
