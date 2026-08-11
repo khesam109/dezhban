@@ -1,9 +1,11 @@
 package com.khesam.dezhban.config;
 
+import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationService;
@@ -18,6 +20,16 @@ class AuthorizationServerConfig {
 
     @Bean
     @Order(1)
+    SecurityFilterChain h2ConsoleSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.securityMatcher(PathRequest.toH2Console());
+        http.authorizeHttpRequests(requests -> requests.anyRequest().permitAll());
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
     SecurityFilterChain authServerConfigurer(HttpSecurity http) throws Exception {
         http.oauth2AuthorizationServer(authServerConfigurer -> {
             http.securityMatcher(authServerConfigurer.getEndpointsMatcher());
@@ -38,7 +50,7 @@ class AuthorizationServerConfig {
     }
 
     @Bean
-    @Order(2)
+    @Order(3)
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests ->
                 requests.requestMatchers("/error", "/favicon.ico", "/callback.html").permitAll()
