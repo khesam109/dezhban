@@ -1,0 +1,45 @@
+debug: true
+
+service:
+  type: internal
+server:
+  port: 8585
+spring:
+  application:
+    name: dezhban
+  datasource:
+    url:
+    username:
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.OracleDialect
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    enabled: true
+    url:
+    user:
+    password:
+    change-log: classpath:db-changes/dezhban-changelog-master.xml
+    contexts: table-creation, sequence-creation, grant-access, populate-data
+    default-schema: dezhban
+    liquibase-schema: dezhban
+    drop-first: false
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: [ "*" ]
+      base-path: /web
+  server:
+    port: 8586
+    base-path: /management
+logging:
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %5p  --- : %m%n%wEx%n-----------------------<<<*>>>-----------------------%n'
+  level:
+    org.springframework.security: INFO
+    org.springframework.security.oauth2.server.authorization: INFO
