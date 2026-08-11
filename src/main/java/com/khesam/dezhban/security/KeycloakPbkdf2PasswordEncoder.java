@@ -13,7 +13,6 @@ import java.util.Base64;
 public class KeycloakPbkdf2PasswordEncoder implements PasswordEncoder {
 
     private static final String ALGORITHM = "PBKDF2WithHmacSHA512";
-    private static final int DEFAULT_KEY_LENGTH = 512;
 
     @Override
     public @Nullable String encode(@Nullable CharSequence rawPassword) {
@@ -27,7 +26,7 @@ public class KeycloakPbkdf2PasswordEncoder implements PasswordEncoder {
         }
 
         // encodedPassword looks like: salt$hash$iterations
-        String[] parts = encodedPassword.split("\\$");
+        String[] parts = encodedPassword.split("\\$", -1);
         if (parts.length != 3) {
             return false;
         }
@@ -36,8 +35,16 @@ public class KeycloakPbkdf2PasswordEncoder implements PasswordEncoder {
             byte[] salt = Base64.getDecoder().decode(parts[0]);
             byte[] expectedHash = Base64.getDecoder().decode(parts[1]);
             int iterations = Integer.parseInt(parts[2]);
+            if (salt.length == 0 || expectedHash.length == 0 || iterations <= 0) {
+                return false;
+            }
 
-            byte[] actualHash = hashPassword(rawPassword.toString(), salt, iterations);
+            byte[] actualHash = hashPassword(
+                    rawPassword.toString(),
+                    salt,
+                    iterations,
+                    expectedHash.length * Byte.SIZE
+            );
 
             return MessageDigest.isEqual(expectedHash, actualHash);
         } catch (IllegalArgumentException | NoSuchAlgorithmException | InvalidKeySpecException e) {
@@ -45,9 +52,9 @@ public class KeycloakPbkdf2PasswordEncoder implements PasswordEncoder {
         }
     }
 
-    private byte[] hashPassword(String password, byte[] salt, int iterations)
+    private byte[] hashPassword(String password, byte[] salt, int iterations, int keyLength)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
-        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, DEFAULT_KEY_LENGTH);
+        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, keyLength);
         SecretKeyFactory skf = SecretKeyFactory.getInstance(ALGORITHM);
         return skf.generateSecret(spec).getEncoded();
     }

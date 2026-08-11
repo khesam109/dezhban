@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dezhban authorization callback</title>
+</head>
+<body>
+<main>
+    <h1>Authorization response</h1>
+    <p>Copy the authorization code into the example script.</p>
+    <pre id="response"></pre>
+</main>
+<script>
+    const parameters = new URLSearchParams(window.location.search);
+    document.getElementById("response").textContent =
+        parameters.get("code") ?? parameters.get("error") ?? "No response parameter received.";
+</script>
+</body>
+</html>

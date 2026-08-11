@@ -18,15 +18,6 @@ class AuthorizationServerConfig {
         http.oauth2AuthorizationServer(authServerConfigurer -> {
             http.securityMatcher(authServerConfigurer.getEndpointsMatcher());
             authServerConfigurer.oidc(Customizer.withDefaults());
-            authServerConfigurer.authorizationEndpoint(oAuth2TokenEndpointConfigurer ->
-                    oAuth2TokenEndpointConfigurer.errorResponseHandler((request, response, exception) -> {
-                        System.out.println(exception.getMessage());
-                    }));
-            authServerConfigurer.tokenEndpoint(tokenEndpointConfigurer ->
-                    tokenEndpointConfigurer.errorResponseHandler((request, response, exception) -> {
-                        System.out.println(exception.getMessage());
-                    })
-            );
         });
 
         http.authorizeHttpRequests(requests ->
@@ -46,7 +37,7 @@ class AuthorizationServerConfig {
     @Order(2)
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests ->
-                requests.requestMatchers("/error", "/favicon.ico").permitAll()
+                requests.requestMatchers("/error", "/favicon.ico", "/callback.html").permitAll()
                 .anyRequest().authenticated()
         );
 
