@@ -16,63 +16,68 @@ public class UserProfileEntity {
     @Column(name = "USER_ID", nullable = false, updatable = false)
     private long userId;
 
-    @Column(name = "FIRST_NAME", nullable = false)
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "USER_ID", nullable = false, updatable = false)
+    private EndUserEntity endUser;
+
+    @Column(name = "FIRST_NAME", nullable = false, length = 255)
     private String firstName;
 
-    @Column(name = "LAST_NAME", nullable = false)
+    @Column(name = "LAST_NAME", nullable = false, length = 255)
     private String lastName;
 
-    @Column(name = "GENDER", nullable = false)
+    @Column(name = "GENDER", nullable = false, length = 6)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(name = "NATIONAL_CODE", nullable = false)
+    @Column(name = "NATIONAL_CODE", nullable = false, length = 10)
     private String nationalCode;
 
-    @Column(name = "ID_NUMBER")
+    @Column(name = "ID_NUMBER", length = 10)
     private String idNumber;
 
-    @Column(name = "BIRTH_DATE", nullable = false)
+    @Column(name = "BIRTH_DATE", nullable = false, length = 10)
     private String birthDate;
 
-    @Column(name = "FATHER_NAME")
+    @Column(name = "FATHER_NAME", length = 255)
     private String fatherName;
 
-    @Column(name = "LATIN_FIRST_NAME")
+    @Column(name = "LATIN_FIRST_NAME", length = 255)
     private String latinFirstName;
 
-    @Column(name = "LATIN_LAST_NAME")
+    @Column(name = "LATIN_LAST_NAME", length = 255)
     private String latinLastName;
 
-    @Column(name = "LATIN_FATHER_NAME")
+    @Column(name = "LATIN_FATHER_NAME", length = 255)
     private String latinFatherName;
 
-    @Column(name = "NATIONALITY", nullable = false)
+    @Column(name = "NATIONALITY", nullable = false, length = 3)
     @Enumerated(EnumType.STRING)
     private Nationality nationality;
 
-    @Column(name = "POSTAL_CODE")
+    @Column(name = "POSTAL_CODE", length = 10)
     private String postalCode;
 
-    @Column(name = "PROVINCE")
+    @Column(name = "PROVINCE", length = 50)
     private String province;
 
-    @Column(name = "CITY")
+    @Column(name = "CITY", length = 50)
     private String city;
 
-    @Column(name = "ADDRESS")
+    @Column(name = "ADDRESS", length = 255)
     private String address;
 
-    @Column(name = "MOBILE_NUMBER")
+    @Column(name = "MOBILE_NUMBER", nullable = false, length = 14)
     private String mobileNumber;
 
     @Column(name = "MOBILE_NUMBER_VERIFIED")
     private Boolean mobileNumberVerified;
 
-    @Column(name = "PHONE_NUMBER")
+    @Column(name = "PHONE_NUMBER", length = 14)
     private String phoneNumber;
 
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", length = 100)
     private String email;
 
     @Column(name = "EMAIL_VERIFIED")
@@ -92,6 +97,14 @@ public class UserProfileEntity {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public EndUserEntity getEndUser() {
+        return endUser;
+    }
+
+    public void setEndUser(EndUserEntity endUser) {
+        this.endUser = endUser;
     }
 
     public String getFirstName() {

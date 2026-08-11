@@ -13,7 +13,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,7 +25,7 @@ public class ClientEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clientSequenceGenerator")
     private long id;
 
-    @Column(name = "CLIENT_ID", nullable = false)
+    @Column(name = "CLIENT_ID", nullable = false, length = 100)
     private String clientId;
 
     @Column(name = "ENABLED", nullable = false)
@@ -35,39 +34,39 @@ public class ClientEntity {
     @Column(name = "PUBLIC_CLIENT", nullable = false)
     private boolean publicClient;
 
-    @Column(name = "SECRET_HASH", nullable = false)
+    @Column(name = "SECRET_HASH", nullable = false, length = 255)
     private String secretHash;
 
     @Column(name = "SECRET_EXPIRES_AT")
-    private Instant secretHashExpiresAt;
+    private Instant secretExpiresAt;
 
-    @Column(name = "CLIENT_TYPE", nullable = false)
+    @Column(name = "CLIENT_TYPE", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private ClientType clientType;
 
-    @Column(name = "AUTHENTICATION_METHODS", nullable = false)
+    @Column(name = "AUTHENTICATION_METHODS", nullable = false, length = 255)
     @Convert(converter = ClientAuthenticationTypeConverter.class)
     private Set<ClientAuthenticationType> authenticationMethods = new HashSet<>();
 
-    @Column(name = "AUTHORIZATION_GRANT_TYPES", nullable = false)
+    @Column(name = "AUTHORIZATION_GRANT_TYPES", nullable = false, length = 255)
     @Convert(converter = GrantTypeConverter.class)
     private Set<GrantType> grantTypes = new HashSet<>();
 
-    @Column(name = "REDIRECT_URIS", nullable = false)
+    @Column(name = "REDIRECT_URIS", nullable = false, length = 1000)
     @Convert(converter = RedirectUriConverter.class)
     private Set<String> redirectUris = new HashSet<>();
 
-    @Column(name = "POST_LOGOUT_REDIRECT_URI")
+    @Column(name = "POST_LOGOUT_REDIRECT_URI", length = 1000)
     private String postLogoutRedirectUri;
 
-    @Column(name = "SCOPES", nullable = false)
+    @Column(name = "SCOPES", nullable = false, length = 1000)
     @Convert(converter = ScopeConverter.class)
     private Set<String> scopes = new HashSet<>();
 
-    @Column(name = "CLIENT_SETTINGS", nullable = false)
+    @Column(name = "CLIENT_SETTINGS", nullable = false, length = 4000)
     private String clientSettings;
 
-    @Column(name = "TOKEN_SETTINGS", nullable = false)
+    @Column(name = "TOKEN_SETTINGS", nullable = false, length = 4000)
     private String tokenSettings;
 
     @Column(name = "CREATED_AT", nullable = false, updatable = false)
@@ -121,12 +120,12 @@ public class ClientEntity {
         this.secretHash = secretHash;
     }
 
-    public Instant getSecretHashExpiresAt() {
-        return secretHashExpiresAt;
+    public Instant getSecretExpiresAt() {
+        return secretExpiresAt;
     }
 
-    public void setSecretHashExpiresAt(Instant secretHashExpiresAt) {
-        this.secretHashExpiresAt = secretHashExpiresAt;
+    public void setSecretExpiresAt(Instant secretExpiresAt) {
+        this.secretExpiresAt = secretExpiresAt;
     }
 
     public ClientType getClientType() {

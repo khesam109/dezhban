@@ -16,10 +16,10 @@ public class EndUserEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "endUserSequenceGenerator")
     private long id;
 
-    @Column(name = "SUBJECT", nullable = false)
+    @Column(name = "SUBJECT", nullable = false, length = 36)
     private String subject;
 
-    @Column(name = "USERNAME", nullable = false)
+    @Column(name = "USERNAME", nullable = false, length = 255)
     private String username;
 
     @Column(name = "ENABLED", nullable = false)
