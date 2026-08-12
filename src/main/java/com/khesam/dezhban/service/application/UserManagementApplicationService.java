@@ -5,6 +5,7 @@ import com.khesam.dezhban.controller.dto.UserDtos;
 import com.khesam.dezhban.dataaccess.local.entity.EndUserEntity;
 import com.khesam.dezhban.dataaccess.local.entity.UserProfileEntity;
 import com.khesam.dezhban.service.domain.authorization.OAuth2AuthorizationDomainService;
+import com.khesam.dezhban.service.domain.authorization.RoleBasedAuthorizationDomainService;
 import com.khesam.dezhban.service.domain.support.DomainException;
 import com.khesam.dezhban.service.domain.user.EndUserDomainService;
 import com.khesam.dezhban.service.domain.user.UserPasswordCredentialDomainService;
@@ -24,17 +25,20 @@ public class UserManagementApplicationService {
     private final UserProfileDomainService userProfileDomainService;
     private final UserPasswordCredentialDomainService credentialDomainService;
     private final OAuth2AuthorizationDomainService authorizationDomainService;
+    private final RoleBasedAuthorizationDomainService roleBasedAuthorizationDomainService;
 
     public UserManagementApplicationService(
             EndUserDomainService endUserDomainService,
             UserProfileDomainService userProfileDomainService,
             UserPasswordCredentialDomainService credentialDomainService,
-            OAuth2AuthorizationDomainService authorizationDomainService
+            OAuth2AuthorizationDomainService authorizationDomainService,
+            RoleBasedAuthorizationDomainService roleBasedAuthorizationDomainService
     ) {
         this.endUserDomainService = endUserDomainService;
         this.userProfileDomainService = userProfileDomainService;
         this.credentialDomainService = credentialDomainService;
         this.authorizationDomainService = authorizationDomainService;
+        this.roleBasedAuthorizationDomainService = roleBasedAuthorizationDomainService;
     }
 
     @Transactional(readOnly = true)
@@ -61,6 +65,7 @@ public class UserManagementApplicationService {
         );
         userProfileDomainService.create(user, toProfileData(request.profile()));
         credentialDomainService.create(user, request.password());
+        roleBasedAuthorizationDomainService.synchronizeUserRoles(user);
         endUserDomainService.flush();
         return toResponse(user);
     }
@@ -82,6 +87,7 @@ public class UserManagementApplicationService {
         );
         UserProfileEntity profile = userProfileDomainService.requireByUserId(user.getId());
         userProfileDomainService.replace(profile, toProfileData(request.profile()));
+        roleBasedAuthorizationDomainService.synchronizeUserRoles(user);
         endUserDomainService.flush();
         return toResponse(user);
     }
@@ -116,6 +122,7 @@ public class UserManagementApplicationService {
                 default -> throw DomainException.invalid("Unsupported user patch field: " + field.getKey());
             }
         }
+        roleBasedAuthorizationDomainService.synchronizeUserRoles(user);
         endUserDomainService.flush();
         return toResponse(user);
     }

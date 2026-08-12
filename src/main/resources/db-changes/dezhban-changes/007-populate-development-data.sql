@@ -76,10 +76,10 @@ INSERT INTO DEZHBAN.CLIENT (
     '{bcrypt}$2a$12$NgRfiG4MpMDp2P0EvKVcOe01wOzkYdprOFPdo4olDUPV61wXsoRqO',
     'AP',
     'CLIENT_SECRET_BASIC',
-    'AUTHORIZATION_CODE,REFRESH_TOKEN',
+    'AUTHORIZATION_CODE,REFRESH_TOKEN,CLIENT_CREDENTIALS',
     'http://127.0.0.1:8585/callback.html',
     'http://127.0.0.1:8585/',
-    'openid',
+    'openid,sign_request:create,sign_request:read',
     '{"requireProofKey":true,"requireAuthorizationConsent":false}',
     '{}'
 );

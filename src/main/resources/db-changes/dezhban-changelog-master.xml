@@ -15,5 +15,7 @@
     <include file="dezhban-changes/008-create-oauth2-authorization-tables.sql" relativeToChangelogFile="true"/>
     <include file="dezhban-changes/009-create-login-audit-and-lockout.sql" relativeToChangelogFile="true"/>
     <include file="dezhban-changes/011-webauthn-user-handle.sql" relativeToChangelogFile="true"/>
+    <include file="dezhban-changes/012-create-authorization-model.sql" relativeToChangelogFile="true"/>
     <include file="dezhban-changes/007-populate-development-data.sql" relativeToChangelogFile="true"/>
+    <include file="dezhban-changes/013-seed-authorization-assignments.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -8,7 +8,10 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
@@ -64,12 +67,18 @@ class AuthorizationServerConfig {
 
     @Bean
     @Order(3)
-    SecurityFilterChain adminApiSecurityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain adminApiSecurityFilterChain(
+            HttpSecurity http,
+            JwtAuthenticationConverter jwtAuthenticationConverter
+    ) throws Exception {
         http.securityMatcher("/api/v1/admin/**");
         http.authorizeHttpRequests(requests ->
                 requests.anyRequest().hasRole("ADMIN")
         );
         http.httpBasic(Customizer.withDefaults());
+        http.oauth2ResourceServer(resourceServer ->
+                resourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter))
+        );
         http.csrf(AbstractHttpConfigurer::disable);
         http.sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -79,7 +88,10 @@ class AuthorizationServerConfig {
 
     @Bean
     @Order(4)
-    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain defaultSecurityFilterChain(
+            HttpSecurity http,
+            JwtAuthenticationConverter jwtAuthenticationConverter
+    ) throws Exception {
         http.authorizeHttpRequests(requests ->
                 requests.requestMatchers(
                         "/error",
@@ -91,9 +103,28 @@ class AuthorizationServerConfig {
         );
 
         http.formLogin(Customizer.withDefaults());
-
+        http.oauth2ResourceServer(resourceServer ->
+                resourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter))
+        );
 
         return http.build();
+    }
+
+    @Bean
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter scopeAuthorities = new JwtGrantedAuthoritiesConverter();
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            var authorities = new java.util.ArrayList<>(scopeAuthorities.convert(jwt));
+            var roles = jwt.getClaimAsStringList("roles");
+            if (roles != null) {
+                roles.stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                        .forEach(authorities::add);
+            }
+            return authorities;
+        });
+        return converter;
     }
 
     @Bean

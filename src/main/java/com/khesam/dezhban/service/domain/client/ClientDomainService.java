@@ -150,6 +150,48 @@ public class ClientDomainService {
                 || String.join(",", configuration.redirectUris()).length() > 1000) {
             throw DomainException.invalid("Serialized client configuration exceeds database limits");
         }
+        validateActorConfiguration(configuration);
+    }
+
+    private void validateActorConfiguration(ClientConfiguration configuration) {
+        switch (configuration.clientType()) {
+            case AP, RO -> {
+                if (configuration.publicClient()) {
+                    throw DomainException.invalid(
+                            configuration.clientType() + " service clients must be confidential"
+                    );
+                }
+                if (!configuration.grantTypes().contains(GrantType.CLIENT_CREDENTIALS)) {
+                    throw DomainException.invalid(
+                            configuration.clientType() + " service clients require client_credentials"
+                    );
+                }
+            }
+            case MOBILE_FIRST_PARTY, MOBILE_THIRD_PARTY -> {
+                if (!configuration.publicClient()) {
+                    throw DomainException.invalid("Mobile applications must be public clients");
+                }
+                if (!configuration.grantTypes().contains(GrantType.AUTHORIZATION_CODE)) {
+                    throw DomainException.invalid(
+                            "Mobile applications require the authorization_code grant"
+                    );
+                }
+                if (!configuration.requireProofKey()) {
+                    throw DomainException.invalid("Mobile applications must require PKCE");
+                }
+            }
+            case ADMIN_PANEL -> {
+                if (configuration.publicClient()) {
+                    throw DomainException.invalid("The admin panel must be a confidential client");
+                }
+                if (!configuration.grantTypes().contains(GrantType.AUTHORIZATION_CODE)
+                        || configuration.grantTypes().contains(GrantType.CLIENT_CREDENTIALS)) {
+                    throw DomainException.invalid(
+                            "The admin panel must use authorization_code and cannot use client_credentials"
+                    );
+                }
+            }
+        }
     }
 
     private void applyConfiguration(ClientEntity client, ClientConfiguration configuration) {

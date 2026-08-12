@@ -5,6 +5,7 @@ import com.khesam.dezhban.controller.dto.PageResponse;
 import com.khesam.dezhban.dataaccess.local.entity.ApClientProfileEntity;
 import com.khesam.dezhban.dataaccess.local.entity.ClientEntity;
 import com.khesam.dezhban.service.domain.authorization.OAuth2AuthorizationDomainService;
+import com.khesam.dezhban.service.domain.authorization.RoleBasedAuthorizationDomainService;
 import com.khesam.dezhban.service.domain.client.ApClientProfileDomainService;
 import com.khesam.dezhban.service.domain.client.ClientDomainService;
 import com.khesam.dezhban.service.domain.support.DomainException;
@@ -24,17 +25,20 @@ public class ClientManagementApplicationService {
     private final ClientDomainService clientDomainService;
     private final ApClientProfileDomainService apClientProfileDomainService;
     private final OAuth2AuthorizationDomainService authorizationDomainService;
+    private final RoleBasedAuthorizationDomainService roleBasedAuthorizationDomainService;
     private final ObjectMapper objectMapper;
 
     public ClientManagementApplicationService(
             ClientDomainService clientDomainService,
             ApClientProfileDomainService apClientProfileDomainService,
             OAuth2AuthorizationDomainService authorizationDomainService,
+            RoleBasedAuthorizationDomainService roleBasedAuthorizationDomainService,
             ObjectMapper objectMapper
     ) {
         this.clientDomainService = clientDomainService;
         this.apClientProfileDomainService = apClientProfileDomainService;
         this.authorizationDomainService = authorizationDomainService;
+        this.roleBasedAuthorizationDomainService = roleBasedAuthorizationDomainService;
         this.objectMapper = objectMapper;
     }
 
@@ -79,6 +83,11 @@ public class ClientManagementApplicationService {
                 created.client(),
                 toApProfileData(request.apProfile())
         );
+        roleBasedAuthorizationDomainService.synchronizeClientAuthorization(
+                created.client(),
+                request.clientType(),
+                request.scopes()
+        );
         clientDomainService.flush();
         return new ClientDtos.CreatedResponse(toResponse(created.client()), created.rawSecret());
     }
@@ -113,6 +122,11 @@ public class ClientManagementApplicationService {
                 )
         );
         apClientProfileDomainService.replace(client, toApProfileData(request.apProfile()));
+        roleBasedAuthorizationDomainService.synchronizeClientAuthorization(
+                client,
+                request.clientType(),
+                request.scopes()
+        );
         clientDomainService.flush();
         return toResponse(client);
     }

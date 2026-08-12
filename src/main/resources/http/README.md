@@ -4,6 +4,27 @@ The seeded client requires PKCE using `S256`. A verifier must be a high-entropy
 RFC 7636 unreserved string between 43 and 128 characters. Never send or persist
 the verifier at the authorization endpoint; only its SHA-256 challenge is sent.
 
+## Actors, roles, and scopes
+
+Dezhban is an MSSP IdP. Client actor types and their default business scopes:
+
+| Client type | Role | Typical capabilities |
+| --- | --- | --- |
+| `AP` | `AP` | `sign_request:create`, `sign_request:read` |
+| `RO` | `RO` | `kyc:perform`, `certificate_order:create`, `certificate_order:read` |
+| `MOBILE_FIRST_PARTY` | `MOBILE_FIRST_PARTY` | register, issue certificate, complete orders, read/sign requests |
+| `MOBILE_THIRD_PARTY` | `MOBILE_THIRD_PARTY` | `sign_request:read` only |
+| `ADMIN_PANEL` | `ADMIN_PANEL` | `system:admin` |
+
+End users receive `END_USER` (and `ADMIN` when flagged). Access tokens include:
+
+- `client_type`, `client_roles`
+- `actor_type` (`END_USER` or the client actor for client credentials)
+- `roles` / `user_roles`
+- `permissions` — authorized business scopes intersected with client allow-list and role permissions
+
+Manage catalogs and assignments through `/api/v1/admin/authorization/**`.
+
 ## Run the local example
 
 Start the server, then generate a verifier, challenge, state, and authorization
