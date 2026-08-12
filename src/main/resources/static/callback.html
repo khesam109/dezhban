@@ -13,8 +13,14 @@
 </main>
 <script>
     const parameters = new URLSearchParams(window.location.search);
-    document.getElementById("response").textContent =
-        parameters.get("code") ?? parameters.get("error") ?? "No response parameter received.";
+    const code = parameters.get("code");
+    const state = parameters.get("state");
+    const error = parameters.get("error");
+    document.getElementById("response").textContent = error
+        ? `error: ${error}\nstate: ${state ?? "<missing>"}`
+        : code
+            ? `code: ${code}\nstate: ${state ?? "<missing>"}`
+            : "No response parameter received.";
 </script>
 </body>
 </html>

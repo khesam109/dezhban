@@ -5,13 +5,15 @@ set -euo pipefail
 #   user: user / salam
 #   client: client / secret
 #
-# 1. Open this URL in a browser and sign in with the user credentials:
-# http://localhost:8585/oauth2/authorize?response_type=code&client_id=client&redirect_uri=http%3A%2F%2F127.0.0.1%3A8585%2Fcallback.html&scope=openid&state=dezhban-example
-#
-# 2. Copy the code displayed by callback.html, then run:
-# AUTHORIZATION_CODE='<code>' bash src/main/resources/http/authorization-code-flow.sh
+# 1. Generate PKCE values and the authorization URL:
+#    bash src/main/resources/http/pkce-authorize.sh
+# 2. Source .dezhban-pkce and open AUTHORIZATION_URL in a browser.
+# 3. Copy the returned code, then run:
+#    source .dezhban-pkce
+#    AUTHORIZATION_CODE='<code>' bash src/main/resources/http/authorization-code-flow.sh
 
 : "${AUTHORIZATION_CODE:?Set AUTHORIZATION_CODE to the code returned by the authorization endpoint}"
+: "${CODE_VERIFIER:?Source .dezhban-pkce or set CODE_VERIFIER}"
 
 AUTHORIZATION_SERVER="${AUTHORIZATION_SERVER:-http://localhost:8585}"
 CLIENT_ID="${CLIENT_ID:-client}"
@@ -26,7 +28,8 @@ TOKEN_RESPONSE="$(
         --header "Content-Type: application/x-www-form-urlencoded" \
         --data-urlencode "grant_type=authorization_code" \
         --data-urlencode "code=${AUTHORIZATION_CODE}" \
-        --data-urlencode "redirect_uri=${REDIRECT_URI}"
+        --data-urlencode "redirect_uri=${REDIRECT_URI}" \
+        --data-urlencode "code_verifier=${CODE_VERIFIER}"
 )"
 
 umask 077

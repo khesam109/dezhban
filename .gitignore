@@ -35,3 +35,5 @@ build/
 ### Local OAuth tokens ###
 .dezhban-tokens
 .dezhban-tokens.*
+.dezhban-pkce
+.dezhban-pkce.*

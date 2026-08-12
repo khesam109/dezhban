@@ -78,7 +78,7 @@ INSERT INTO DEZHBAN.CLIENT (
     'http://127.0.0.1:8585/callback.html',
     'http://127.0.0.1:8585/',
     'openid',
-    '{"requireProofKey":false,"requireAuthorizationConsent":false}',
+    '{"requireProofKey":true,"requireAuthorizationConsent":false}',
     '{}'
 );
 
