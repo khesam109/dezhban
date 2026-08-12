@@ -49,6 +49,9 @@ public class UserWebAuthnCredentialEntity {
     @Column(name = "LABEL", length = 100)
     private String label;
 
+    @Column(name = "TRANSPORTS", length = 255)
+    private String transports;
+
     public long getId() {
         return id;
     }
@@ -127,5 +130,13 @@ public class UserWebAuthnCredentialEntity {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public String getTransports() {
+        return transports;
+    }
+
+    public void setTransports(String transports) {
+        this.transports = transports;
     }
 }

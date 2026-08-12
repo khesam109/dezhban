@@ -32,6 +32,11 @@ public class EndUserDomainService {
                 .orElseThrow(() -> DomainException.notFound("User not found"));
     }
 
+    public EndUserEntity requireByUsername(String username) {
+        return endUserRepository.findByUsername(username)
+                .orElseThrow(() -> DomainException.notFound("User not found"));
+    }
+
     public void requireUsernameAvailable(String username, String currentUsername) {
         if (currentUsername != null && username.equals(currentUsername)) {
             return;
@@ -54,6 +59,7 @@ public class EndUserDomainService {
         user.setEnabled(enabled);
         user.setAdmin(admin);
         user.setNotBefore(notBefore);
+        user.setWebAuthnHandle(WebAuthnUserHandle.generate());
         return endUserRepository.saveAndFlush(user);
     }
 

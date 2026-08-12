@@ -59,3 +59,9 @@ security:
     client-max-attempts: 10
     client-observation-window: 10m
     client-lock-duration: 10m
+  webauthn:
+    rp-id: localhost
+    rp-name: Dezhban
+    allowed-origins:
+      - http://localhost:8585
+      - http://127.0.0.1:8585

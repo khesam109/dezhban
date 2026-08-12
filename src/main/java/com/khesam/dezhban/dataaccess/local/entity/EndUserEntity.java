@@ -51,6 +51,9 @@ public class EndUserEntity {
     @Column(name = "NOT_BEFORE")
     private Instant notBefore;
 
+    @Column(name = "WEBAUTHN_HANDLE", length = 64)
+    private String webAuthnHandle;
+
     @Version
     @Column(name = "VERSION", nullable = false)
     private long version;
@@ -153,5 +156,13 @@ public class EndUserEntity {
 
     public long getVersion() {
         return version;
+    }
+
+    public String getWebAuthnHandle() {
+        return webAuthnHandle;
+    }
+
+    public void setWebAuthnHandle(String webAuthnHandle) {
+        this.webAuthnHandle = webAuthnHandle;
     }
 }

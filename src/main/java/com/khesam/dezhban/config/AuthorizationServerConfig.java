@@ -81,7 +81,12 @@ class AuthorizationServerConfig {
     @Order(4)
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests ->
-                requests.requestMatchers("/error", "/favicon.ico", "/callback.html").permitAll()
+                requests.requestMatchers(
+                        "/error",
+                        "/favicon.ico",
+                        "/callback.html",
+                        "/api/v1/webauthn/authentication/**"
+                ).permitAll()
                 .anyRequest().authenticated()
         );
 
