@@ -163,9 +163,7 @@ public class ClientManagementService {
         }
         ClientEntity client = find(clientId);
         requireMatchingVersion(ifMatch, client.getVersion());
-        var fields = patch.properties();
-        while (fields.hasNext()) {
-            var field = fields.next();
+        for (var field : patch.properties()) {
             switch (field.getKey()) {
                 case "enabled" -> client.setEnabled(requiredBoolean(field.getValue(), "enabled"));
                 case "notBefore" -> client.setNotBefore(

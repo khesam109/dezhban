@@ -119,9 +119,7 @@ public class UserManagementService {
         }
         EndUserEntity user = findBySubject(subject);
         requireMatchingVersion(ifMatch, user.getVersion(), "user");
-        var fields = patch.properties();
-        while (fields.hasNext()) {
-            var field = fields.next();
+        for (var field : patch.properties()) {
             switch (field.getKey()) {
                 case "username" -> {
                     String username = normalizeUsername(requiredText(field.getValue(), "username"));
