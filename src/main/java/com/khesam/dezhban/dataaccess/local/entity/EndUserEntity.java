@@ -25,11 +25,20 @@ public class EndUserEntity {
     @Column(name = "ENABLED", nullable = false)
     private boolean enabled;
 
+    @Column(name = "ADMIN", nullable = false)
+    private boolean admin;
+
     @Column(name = "LOCKED", nullable = false)
     private boolean locked;
 
     @Column(name = "LOCK_UNTIL")
     private Instant lockUntil;
+
+    @Column(name = "FAILED_LOGIN_ATTEMPTS", nullable = false)
+    private int failedLoginAttempts;
+
+    @Column(name = "FAILED_LOGIN_AT")
+    private Instant failedLoginAt;
 
     @Column(name = "CREATED_AT", nullable = false, updatable = false)
     @CreationTimestamp
@@ -41,6 +50,10 @@ public class EndUserEntity {
 
     @Column(name = "NOT_BEFORE")
     private Instant notBefore;
+
+    @Version
+    @Column(name = "VERSION", nullable = false)
+    private long version;
 
     public long getId() {
         return id;
@@ -74,6 +87,14 @@ public class EndUserEntity {
         this.enabled = enabled;
     }
 
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
     public boolean isLocked() {
         return locked;
     }
@@ -88,6 +109,22 @@ public class EndUserEntity {
 
     public void setLockUntil(Instant lockUntil) {
         this.lockUntil = lockUntil;
+    }
+
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
+    }
+
+    public Instant getFailedLoginAt() {
+        return failedLoginAt;
+    }
+
+    public void setFailedLoginAt(Instant failedLoginAt) {
+        this.failedLoginAt = failedLoginAt;
     }
 
     public Instant getCreatedAt() {
@@ -112,5 +149,9 @@ public class EndUserEntity {
 
     public void setNotBefore(Instant notBefore) {
         this.notBefore = notBefore;
+    }
+
+    public long getVersion() {
+        return version;
     }
 }

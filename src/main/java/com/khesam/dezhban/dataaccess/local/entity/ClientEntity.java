@@ -34,7 +34,7 @@ public class ClientEntity {
     @Column(name = "PUBLIC_CLIENT", nullable = false)
     private boolean publicClient;
 
-    @Column(name = "SECRET_HASH", nullable = false, length = 255)
+    @Column(name = "SECRET_HASH", length = 255)
     private String secretHash;
 
     @Column(name = "SECRET_EXPIRES_AT")
@@ -79,6 +79,22 @@ public class ClientEntity {
 
     @Column(name = "NOT_BEFORE")
     private Instant notBefore;
+
+    @Column(name = "LOCKED", nullable = false)
+    private boolean locked;
+
+    @Column(name = "LOCK_UNTIL")
+    private Instant lockUntil;
+
+    @Column(name = "FAILED_AUTH_ATTEMPTS", nullable = false)
+    private int failedAuthenticationAttempts;
+
+    @Column(name = "FAILED_AUTH_AT")
+    private Instant failedAuthenticationAt;
+
+    @Version
+    @Column(name = "VERSION", nullable = false)
+    private long version;
 
     public long getId() {
         return id;
@@ -214,5 +230,41 @@ public class ClientEntity {
 
     public void setNotBefore(Instant notBefore) {
         this.notBefore = notBefore;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public Instant getLockUntil() {
+        return lockUntil;
+    }
+
+    public void setLockUntil(Instant lockUntil) {
+        this.lockUntil = lockUntil;
+    }
+
+    public int getFailedAuthenticationAttempts() {
+        return failedAuthenticationAttempts;
+    }
+
+    public void setFailedAuthenticationAttempts(int failedAuthenticationAttempts) {
+        this.failedAuthenticationAttempts = failedAuthenticationAttempts;
+    }
+
+    public Instant getFailedAuthenticationAt() {
+        return failedAuthenticationAt;
+    }
+
+    public void setFailedAuthenticationAt(Instant failedAuthenticationAt) {
+        this.failedAuthenticationAt = failedAuthenticationAt;
+    }
+
+    public long getVersion() {
+        return version;
     }
 }
