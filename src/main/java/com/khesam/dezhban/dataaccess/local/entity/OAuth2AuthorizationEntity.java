@@ -13,6 +13,9 @@ public class OAuth2AuthorizationEntity {
     @Column(name = "REGISTERED_CLIENT_ID", nullable = false, length = 100)
     private String registeredClientId;
 
+    @Column(name = "PRINCIPAL_NAME", nullable = false, length = 200)
+    private String principalName;
+
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "AUTHORIZATION_DATA", nullable = false)
@@ -57,6 +60,14 @@ public class OAuth2AuthorizationEntity {
 
     public void setRegisteredClientId(String registeredClientId) {
         this.registeredClientId = registeredClientId;
+    }
+
+    public String getPrincipalName() {
+        return principalName;
+    }
+
+    public void setPrincipalName(String principalName) {
+        this.principalName = principalName;
     }
 
     public byte[] getAuthorizationData() {

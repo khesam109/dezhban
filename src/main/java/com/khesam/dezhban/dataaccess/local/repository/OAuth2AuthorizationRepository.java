@@ -25,6 +25,10 @@ public interface OAuth2AuthorizationRepository
 
     Optional<OAuth2AuthorizationEntity> findByDeviceCodeDigest(String digest);
 
+    void deleteAllByPrincipalName(String principalName);
+
+    void deleteAllByRegisteredClientId(String registeredClientId);
+
     @Query("""
             select authorization
             from OAuth2AuthorizationEntity authorization

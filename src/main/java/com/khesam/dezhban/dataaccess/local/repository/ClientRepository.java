@@ -13,6 +13,8 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
 
     Optional<ClientEntity> findByClientId(String clientId);
 
+    boolean existsByClientId(String clientId);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select client from ClientEntity client where client.clientId = :clientId")
     Optional<ClientEntity> findForUpdateByClientId(@Param("clientId") String clientId);

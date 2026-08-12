@@ -34,7 +34,7 @@ public class ClientEntity {
     @Column(name = "PUBLIC_CLIENT", nullable = false)
     private boolean publicClient;
 
-    @Column(name = "SECRET_HASH", nullable = false, length = 255)
+    @Column(name = "SECRET_HASH", length = 255)
     private String secretHash;
 
     @Column(name = "SECRET_EXPIRES_AT")
@@ -91,6 +91,10 @@ public class ClientEntity {
 
     @Column(name = "FAILED_AUTH_AT")
     private Instant failedAuthenticationAt;
+
+    @Version
+    @Column(name = "VERSION", nullable = false)
+    private long version;
 
     public long getId() {
         return id;
@@ -258,5 +262,9 @@ public class ClientEntity {
 
     public void setFailedAuthenticationAt(Instant failedAuthenticationAt) {
         this.failedAuthenticationAt = failedAuthenticationAt;
+    }
+
+    public long getVersion() {
+        return version;
     }
 }

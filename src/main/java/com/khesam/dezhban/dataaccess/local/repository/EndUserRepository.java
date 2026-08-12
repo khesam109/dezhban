@@ -13,6 +13,10 @@ public interface EndUserRepository extends JpaRepository<EndUserEntity, Long> {
 
     Optional<EndUserEntity> findByUsername(String username);
 
+    Optional<EndUserEntity> findBySubject(String subject);
+
+    boolean existsByUsername(String username);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select endUser from EndUserEntity endUser where endUser.username = :username")
     Optional<EndUserEntity> findForUpdateByUsername(@Param("username") String username);

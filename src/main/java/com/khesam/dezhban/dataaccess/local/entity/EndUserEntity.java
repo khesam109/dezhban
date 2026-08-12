@@ -25,6 +25,9 @@ public class EndUserEntity {
     @Column(name = "ENABLED", nullable = false)
     private boolean enabled;
 
+    @Column(name = "ADMIN", nullable = false)
+    private boolean admin;
+
     @Column(name = "LOCKED", nullable = false)
     private boolean locked;
 
@@ -47,6 +50,10 @@ public class EndUserEntity {
 
     @Column(name = "NOT_BEFORE")
     private Instant notBefore;
+
+    @Version
+    @Column(name = "VERSION", nullable = false)
+    private long version;
 
     public long getId() {
         return id;
@@ -78,6 +85,14 @@ public class EndUserEntity {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 
     public boolean isLocked() {
@@ -134,5 +149,9 @@ public class EndUserEntity {
 
     public void setNotBefore(Instant notBefore) {
         this.notBefore = notBefore;
+    }
+
+    public long getVersion() {
+        return version;
     }
 }

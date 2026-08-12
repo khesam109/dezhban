@@ -33,6 +33,7 @@ public class OAuth2AuthorizationMapper {
     ) {
         entity.setId(authorization.getId());
         entity.setRegisteredClientId(authorization.getRegisteredClientId());
+        entity.setPrincipalName(authorization.getPrincipalName());
 
         String state = authorization.getAttribute(OAuth2ParameterNames.STATE);
         entity.setStateDigest(state == null ? null : tokenHasher.digest(state));

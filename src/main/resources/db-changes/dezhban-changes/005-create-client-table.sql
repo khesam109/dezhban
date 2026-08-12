@@ -12,7 +12,7 @@ CREATE TABLE DEZHBAN.CLIENT
     CLIENT_ID                 VARCHAR2 (100 CHAR)      NOT NULL,
     ENABLED                   NUMBER   (1)             NOT NULL,
     PUBLIC_CLIENT             NUMBER   (1)             NOT NULL,
-    SECRET_HASH               VARCHAR2 (255 CHAR)      NOT NULL,
+    SECRET_HASH               VARCHAR2 (255 CHAR),
     SECRET_EXPIRES_AT         TIMESTAMP WITH TIME ZONE         ,
 
     CLIENT_TYPE               VARCHAR2 (50 CHAR)       NOT NULL,
