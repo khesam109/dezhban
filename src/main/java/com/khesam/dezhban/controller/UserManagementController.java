@@ -2,7 +2,7 @@ package com.khesam.dezhban.controller;
 
 import com.khesam.dezhban.controller.dto.PageResponse;
 import com.khesam.dezhban.controller.dto.UserDtos;
-import com.khesam.dezhban.service.UserManagementService;
+import com.khesam.dezhban.service.application.UserManagementApplicationService;
 import jakarta.validation.Valid;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +15,9 @@ import java.net.URI;
 @RequestMapping("/api/v1/admin/users")
 public class UserManagementController {
 
-    private final UserManagementService userManagementService;
+    private final UserManagementApplicationService userManagementService;
 
-    public UserManagementController(UserManagementService userManagementService) {
+    public UserManagementController(UserManagementApplicationService userManagementService) {
         this.userManagementService = userManagementService;
     }
 

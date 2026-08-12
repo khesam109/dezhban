@@ -1,5 +1,6 @@
 package com.khesam.dezhban.controller.error;
 
+import com.khesam.dezhban.service.domain.support.DomainException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.net.URI;
-import java.util.List;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -20,6 +20,21 @@ public class ApiExceptionHandler {
                 exception.getMessage()
         );
         problem.setTitle(exception.getStatus().getReasonPhrase());
+        problem.setType(URI.create("urn:dezhban:problem:" + exception.getCode().toLowerCase()));
+        problem.setInstance(URI.create(request.getRequestURI()));
+        problem.setProperty("code", exception.getCode());
+        return problem;
+    }
+
+    @ExceptionHandler(DomainException.class)
+    ProblemDetail handleDomainException(DomainException exception, HttpServletRequest request) {
+        HttpStatus status = switch (exception.getKind()) {
+            case NOT_FOUND -> HttpStatus.NOT_FOUND;
+            case CONFLICT -> HttpStatus.CONFLICT;
+            case INVALID -> HttpStatus.UNPROCESSABLE_ENTITY;
+        };
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(status, exception.getMessage());
+        problem.setTitle(status.getReasonPhrase());
         problem.setType(URI.create("urn:dezhban:problem:" + exception.getCode().toLowerCase()));
         problem.setInstance(URI.create(request.getRequestURI()));
         problem.setProperty("code", exception.getCode());

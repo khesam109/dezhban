@@ -2,7 +2,7 @@ package com.khesam.dezhban.controller;
 
 import com.khesam.dezhban.controller.dto.ClientDtos;
 import com.khesam.dezhban.controller.dto.PageResponse;
-import com.khesam.dezhban.service.ClientManagementService;
+import com.khesam.dezhban.service.application.ClientManagementApplicationService;
 import jakarta.validation.Valid;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +15,9 @@ import java.net.URI;
 @RequestMapping("/api/v1/admin/clients")
 public class OAuthClientManagementController {
 
-    private final ClientManagementService clientManagementService;
+    private final ClientManagementApplicationService clientManagementService;
 
-    public OAuthClientManagementController(ClientManagementService clientManagementService) {
+    public OAuthClientManagementController(ClientManagementApplicationService clientManagementService) {
         this.clientManagementService = clientManagementService;
     }
 
