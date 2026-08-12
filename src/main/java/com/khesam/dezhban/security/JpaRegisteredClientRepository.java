@@ -53,7 +53,10 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
     }
 
     private boolean isActive(ClientEntity client) {
+        Instant now = Instant.now();
         return client.isEnabled()
-                && (client.getNotBefore() == null || !client.getNotBefore().isAfter(Instant.now()));
+                && (client.getNotBefore() == null || !client.getNotBefore().isAfter(now))
+                && (!client.isLocked()
+                    || client.getLockUntil() != null && !client.getLockUntil().isAfter(now));
     }
 }

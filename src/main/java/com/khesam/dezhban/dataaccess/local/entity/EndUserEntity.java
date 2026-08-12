@@ -31,6 +31,12 @@ public class EndUserEntity {
     @Column(name = "LOCK_UNTIL")
     private Instant lockUntil;
 
+    @Column(name = "FAILED_LOGIN_ATTEMPTS", nullable = false)
+    private int failedLoginAttempts;
+
+    @Column(name = "FAILED_LOGIN_AT")
+    private Instant failedLoginAt;
+
     @Column(name = "CREATED_AT", nullable = false, updatable = false)
     @CreationTimestamp
     private Instant createdAt;
@@ -88,6 +94,22 @@ public class EndUserEntity {
 
     public void setLockUntil(Instant lockUntil) {
         this.lockUntil = lockUntil;
+    }
+
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
+    }
+
+    public Instant getFailedLoginAt() {
+        return failedLoginAt;
+    }
+
+    public void setFailedLoginAt(Instant failedLoginAt) {
+        this.failedLoginAt = failedLoginAt;
     }
 
     public Instant getCreatedAt() {

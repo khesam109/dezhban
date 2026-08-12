@@ -80,6 +80,18 @@ public class ClientEntity {
     @Column(name = "NOT_BEFORE")
     private Instant notBefore;
 
+    @Column(name = "LOCKED", nullable = false)
+    private boolean locked;
+
+    @Column(name = "LOCK_UNTIL")
+    private Instant lockUntil;
+
+    @Column(name = "FAILED_AUTH_ATTEMPTS", nullable = false)
+    private int failedAuthenticationAttempts;
+
+    @Column(name = "FAILED_AUTH_AT")
+    private Instant failedAuthenticationAt;
+
     public long getId() {
         return id;
     }
@@ -214,5 +226,37 @@ public class ClientEntity {
 
     public void setNotBefore(Instant notBefore) {
         this.notBefore = notBefore;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public Instant getLockUntil() {
+        return lockUntil;
+    }
+
+    public void setLockUntil(Instant lockUntil) {
+        this.lockUntil = lockUntil;
+    }
+
+    public int getFailedAuthenticationAttempts() {
+        return failedAuthenticationAttempts;
+    }
+
+    public void setFailedAuthenticationAttempts(int failedAuthenticationAttempts) {
+        this.failedAuthenticationAttempts = failedAuthenticationAttempts;
+    }
+
+    public Instant getFailedAuthenticationAt() {
+        return failedAuthenticationAt;
+    }
+
+    public void setFailedAuthenticationAt(Instant failedAuthenticationAt) {
+        this.failedAuthenticationAt = failedAuthenticationAt;
     }
 }

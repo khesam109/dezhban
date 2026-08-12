@@ -48,3 +48,11 @@ logging:
   level:
     org.springframework.security: INFO
     org.springframework.security.oauth2.server.authorization: INFO
+security:
+  authentication-lockout:
+    user-max-attempts: 5
+    user-observation-window: 15m
+    user-lock-duration: 15m
+    client-max-attempts: 10
+    client-observation-window: 10m
+    client-lock-duration: 10m
